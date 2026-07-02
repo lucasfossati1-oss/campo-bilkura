@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Campo">
+<meta name="application-name" content="Campo">
+<meta name="theme-color" content="#2d6a2d">
+<title>Campo · BILKURA</title>
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="manifest" href="manifest.json">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
+.header{background:#fff;border-bottom:1px solid #e5e5e0;padding:14px 16px 10px;position:sticky;top:0;z-index:100}
+.header h1{font-size:17px;font-weight:600;color:#1a1a1a}
+.header-sub{font-size:12px;color:#888;margin-top:1px}
+.tabs{display:flex;background:#fff;border-bottom:1px solid #e5e5e0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;padding:12px 16px;font-size:13px;font-weight:500;color:#888;border:none;background:none;border-bottom:2px solid transparent;cursor:pointer;white-space:nowrap;font-family:inherit}
+.tab.active{color:#2d6a2d;border-bottom-color:#2d6a2d}
+.section{display:none;padding:16px;padding-bottom:40px}.section.active{display:block}
+.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:12px;border:1px solid #e8e8e3}
+.card-title{font-size:14px;font-weight:600;color:#444;margin-bottom:14px}
+label{display:block;font-size:13px;color:#666;margin-bottom:5px;margin-top:14px}
+label:first-child{margin-top:0}
+input,select,textarea{width:100%;padding:11px 13px;border:1px solid #ddd;border-radius:10px;font-size:16px;font-family:inherit;background:#fff;color:#1a1a1a;appearance:none;-webkit-appearance:none}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#2d6a2d;box-shadow:0 0 0 3px rgba(45,106,45,0.1)}
+textarea{resize:vertical;min-height:70px;line-height:1.5}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23999' d='M6 8L0 0h12z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-family:inherit;cursor:pointer;margin-top:16px;font-weight:600;letter-spacing:0.01em}
+.btn-primary{background:#2d6a2d;color:#fff}
+.btn-primary:active{background:#245424;transform:scale(0.99)}
+.btn-outline{background:#fff;color:#2d6a2d;border:1.5px solid #2d6a2d}
+.btn-outline:active{background:#f0f7f0}
+.btn-sm{margin-top:8px;padding:10px;font-size:14px;border-radius:10px}
+.entry-row{padding:11px 0;border-bottom:1px solid #f0f0eb;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.entry-row:last-child{border-bottom:none}
+.entry-main{flex:1;min-width:0}
+.entry-title{font-size:15px;font-weight:500;line-height:1.3}
+.entry-sub{font-size:12px;color:#888;margin-top:3px;line-height:1.4}
+.entry-delete{background:none;border:none;color:#ccc;font-size:22px;padding:0 2px;line-height:1;cursor:pointer;flex-shrink:0;margin-top:-2px}
+.entry-edit{background:none;border:none;color:#bbb;font-size:17px;padding:0 2px;line-height:1;cursor:pointer;flex-shrink:0}
+.entry-edit:active{color:#2d6a2d}
+.entry-actions{display:flex;gap:2px;align-items:center;flex-shrink:0}
+.empty-state{text-align:center;padding:32px 16px;color:#aaa;font-size:14px}
+.empty-state svg{margin-bottom:8px;opacity:0.4}
+.badge-count{font-size:12px;color:#888;background:#f5f5f0;padding:2px 8px;border-radius:20px;border:1px solid #e5e5e0}
+.list-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.list-title{font-size:14px;font-weight:600;color:#444}
+.ing{color:#1a7a1a;font-weight:600}
+.eg{color:#c0392b;font-weight:600}
+.warn{font-size:12px;color:#c0392b;margin-top:6px;padding:8px 10px;background:#fff0f0;border-radius:8px}
+/* STOCK */
+.campo-block{background:#fff;border-radius:14px;margin-bottom:12px;border:1px solid #e8e8e3;overflow:hidden}
+.campo-header{padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:#f9f9f6}
+.campo-nombre{font-size:15px;font-weight:600}
+.campo-total-badge{font-size:13px;font-weight:600;color:#2d6a2d;background:#e8f5e8;padding:3px 10px;border-radius:20px}
+.cat-row{display:flex;align-items:center;padding:10px 16px;border-top:1px solid #f0f0eb}
+.cat-nombre{flex:1;font-size:14px;color:#555}
+.cat-cant{font-size:16px;font-weight:600;min-width:44px;text-align:right}
+.cat-edit-btn{background:none;border:none;color:#bbb;cursor:pointer;padding:4px 6px;margin-left:4px;font-size:18px}
+.edit-inline{display:none;padding:10px 16px 12px;border-top:1px solid #f0f0eb;background:#fafaf7}
+.edit-inline.open{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:end}
+.campo-footer{padding:12px 16px;border-top:1px solid #e5e5e0;display:flex;justify-content:space-between;font-size:14px;font-weight:600;background:#f9f9f6;color:#2d6a2d}
+.grand-total-card{background:#2d6a2d;color:#fff;border-radius:14px;padding:16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center}
+.grand-total-label{font-size:13px;opacity:0.85}
+.grand-total-num{font-size:28px;font-weight:700}
+/* FEEDLOT */
+.corrales-grid{margin-bottom:16px;background:#fff;border-radius:14px;border:1px solid #e8e8e3;overflow:hidden;padding:12px}
+.corral-card{border-radius:12px;padding:12px 8px;border:2px solid #e8e8e3;background:#fff;cursor:pointer;text-align:center}
+.corral-card.ocupado{border-color:#2d6a2d;background:#f0f7f0}
+.corral-num{font-size:11px;color:#999;margin-bottom:4px;font-weight:600;text-transform:uppercase}
+.corral-status{font-size:13px;font-weight:600;line-height:1.3}
+.corral-mini{font-size:11px;color:#666;margin-top:3px}
+.gmd-pos{display:inline-block;background:#e8f5e8;color:#2d6a2d;font-weight:700;font-size:12px;padding:2px 7px;border-radius:20px;margin-top:4px}
+.gmd-neg{background:#fff0f0;color:#c0392b}
+.fl-detail{background:#fff;border-radius:14px;border:1px solid #e8e8e3;margin-bottom:12px;overflow:hidden}
+.fl-detail-hdr{background:#2d6a2d;color:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+.fl-detail-title{font-size:15px;font-weight:600}
+.fl-detail-body{padding:14px 16px}
+.stat-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f0f0eb}
+.stat-row:last-child{border-bottom:none}
+.stat-label{font-size:13px;color:#666}
+.stat-val{font-size:14px;font-weight:600}
+.pesaje-item{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid #f5f5f0;font-size:13px}
+.pesaje-item:last-child{border-bottom:none}
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:12px 22px;border-radius:24px;font-size:14px;font-weight:500;transition:transform .25s ease;z-index:999;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,0.2)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.arrow-txt{color:#185FA5;font-weight:600}
+.traslado-ruta{font-size:12px;color:#666;margin-top:2px}
+.sync-info{font-size:12px;color:#aaa;text-align:center;padding:8px;background:#f9f9f6;border-radius:10px;margin-bottom:12px;line-height:1.5}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📋 Registro de Campo</h1>
+  <div class="header-sub">BILKURA S.A. · La Pampa</div>
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('stock')">📦 Stock</button>
+  <button class="tab" onclick="switchTab('hacienda')">🐄 Hacienda</button>
+  <button class="tab" onclick="switchTab('gastos')">💰 Gastos</button>
+  <button class="tab" onclick="switchTab('lluvias')">🌧 Lluvias</button>
+  <button class="tab" onclick="switchTab('traslados')">🚛 Traslados</button>
+  <button class="tab" onclick="switchTab('feedlot')">🐂 Feedlot</button>
+</div>
+
+<!-- STOCK -->
+<div id="sec-stock" class="section active">
+  <div class="sync-info">Los datos se guardan en este celular.<br>Para sincronizar entre usuarios, compartí el archivo exportado.</div>
+  <div class="grand-total-card">
+    <div class="grand-total-label">Total de cabezas</div>
+    <div class="grand-total-num" id="grand-total">0</div>
+  </div>
+  <div id="stock-campos"></div>
+  <div class="card">
+    <div class="card-title">Campos / Unidades productivas</div>
+    <div id="campos-mgmt-list"></div>
+    <label style="margin-top:14px">Agregar campo</label>
+    <div style="display:flex;gap:8px;margin-top:6px">
+      <input type="text" id="nuevo-campo" placeholder="Nombre del nuevo campo..." style="margin:0;flex:1">
+      <button onclick="agregarCampo()" style="background:#2d6a2d;color:#fff;border:none;border-radius:10px;padding:0 18px;font-size:22px;cursor:pointer;flex-shrink:0">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- HACIENDA -->
+<div id="sec-hacienda" class="section">
+  <div class="card">
+    <div class="card-title">Nuevo registro</div>
+    <label>Fecha</label>
+    <input type="date" id="h-fecha">
+    <div class="row2">
+      <div><label>Categoría</label>
+      <select id="h-cat">
+        <option>Vacas preñadas</option><option>Vacas secas</option><option>Vaquillonas</option><option>Novillos</option><option>Terneros</option><option>Terneras</option><option>Toros</option><option>Otra</option>
+      </select></div>
+      <div><label>Cantidad</label>
+      <input type="number" id="h-cant" placeholder="0" min="0" inputmode="numeric"></div>
+    </div>
+    <div class="row2">
+      <div><label>Evento</label>
+      <select id="h-evento" onchange="toggleRecatDestino()">
+        <option>Entrada</option><option>Salida / Venta</option><option>Muerte</option><option>Parto</option><option>Recategorización</option><option>Tacto</option><option>Vacunación</option><option>Sanidad</option><option>Pesada</option><option>Otro</option>
+      </select></div>
+      <div><label>Peso prom. (kg)</label>
+      <input type="number" id="h-peso" placeholder="—" min="0" inputmode="numeric"></div>
+    </div>
+    <div id="h-recat-row" style="display:none">
+      <label>Categoría destino</label>
+      <select id="h-cat-destino">
+        <option>Vacas preñadas</option><option>Vacas secas</option><option>Vaquillonas</option><option>Novillos</option><option>Terneros</option><option>Terneras</option><option>Toros</option><option>Otra</option>
+      </select>
+    </div>
+    <label>Vincular a tropa del Feedlot</label>
+    <select id="h-tropa-feedlot" onchange="onSelectTropaFeedlot()">
+      <option value="">— Sin vincular —</option>
+    </select>
+    <label>Nombre de tropa / lote</label>
+    <input type="text" id="h-nombre" placeholder="Ej: Terneras destete 2025 (opcional)">
+    <label>Campo</label>
+    <select id="h-campo"><option value="">— Sin campo —</option></select>
+    <label>Observaciones</label>
+    <textarea id="h-obs" placeholder="Opcional..."></textarea>
+    <button class="btn btn-primary" id="h-btn" onclick="saveHacienda()">Guardar registro</button>
+    <button class="btn btn-outline" id="h-cancel" style="display:none;margin-top:8px" onclick="cancelEdit('h')">Cancelar edición</button>
+  </div>
+  <div class="card">
+    <div class="list-header">
+      <span class="list-title">Historial</span>
+      <span class="badge-count" id="h-count">0</span>
+    </div>
+    <div id="h-list"><div class="empty-state">Sin registros aún</div></div>
+  </div>
+</div>
+
+<!-- GASTOS -->
+<div id="sec-gastos" class="section">
+  <div class="card">
+    <div class="card-title">Nuevo movimiento</div>
+    <div class="row2">
+      <div><label>Fecha</label><input type="date" id="g-fecha"></div>
+      <div><label>Tipo</label>
+      <select id="g-tipo"><option value="ingreso">Ingreso</option><option value="egreso">Gasto</option></select></div>
+    </div>
+    <label>Rubro</label>
+    <select id="g-rubro">
+      <option>Venta hacienda</option><option>Venta granos</option><option>Arriendo cobrado</option><option>Combustible</option><option>Agroquímicos</option><option>Semillas</option><option>Veterinaria / sanidad</option><option>Salarios / jornales</option><option>Maquinaria / labores</option><option>Arriendo pagado</option><option>Impuestos</option><option>Otro</option>
+    </select>
+    <label>Importe ($)</label>
+    <input type="number" id="g-importe" placeholder="0" min="0" inputmode="decimal">
+    <label>Descripción</label>
+    <textarea id="g-desc" placeholder="Opcional..."></textarea>
+    <button class="btn btn-primary" id="g-btn" onclick="saveGasto()">Guardar</button>
+    <button class="btn btn-outline" id="g-cancel" style="display:none;margin-top:8px" onclick="cancelEdit('g')">Cancelar edición</button>
+  </div>
+  <div class="card" id="g-resumen" style="display:none">
+    <div class="row2" style="text-align:center">
+      <div><div style="font-size:12px;color:#666;margin-bottom:4px">Total ingresos</div><div class="ing" style="font-size:20px" id="g-tot-ing">$0</div></div>
+      <div><div style="font-size:12px;color:#666;margin-bottom:4px">Total gastos</div><div class="eg" style="font-size:20px" id="g-tot-eg">$0</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="list-header">
+      <span class="list-title">Historial</span>
+      <span class="badge-count" id="g-count">0</span>
+    </div>
+    <div id="g-list"><div class="empty-state">Sin registros aún</div></div>
+  </div>
+</div>
+
+<!-- LLUVIAS -->
+<div id="sec-lluvias" class="section">
+  <div class="card">
+    <div class="card-title">Nueva lluvia</div>
+    <div class="row2">
+      <div><label>Fecha</label><input type="date" id="l-fecha"></div>
+      <div><label>Milímetros (mm)</label><input type="number" id="l-mm" placeholder="0" min="0" step="0.1" inputmode="decimal"></div>
+    </div>
+    <label>Campo / Sector</label>
+    <select id="l-sector"><option value="">— Sin especificar —</option></select>
+    <label>Observaciones</label>
+    <textarea id="l-obs" placeholder="Tormenta, llovizna, granizo..."></textarea>
+    <button class="btn btn-primary" id="l-btn" onclick="saveLluvia()">Guardar</button>
+    <button class="btn btn-outline" id="l-cancel" style="display:none;margin-top:8px" onclick="cancelEdit('l')">Cancelar edición</button>
+  </div>
+  <div class="card">
+    <div class="list-header">
+      <span class="list-title">Historial</span>
+      <span class="badge-count" id="l-count">0</span>
+    </div>
+    <div id="l-list"><div class="empty-state">Sin registros aún</div></div>
+  </div>
+</div>
+
+<!-- TRASLADOS -->
+<div id="sec-traslados" class="section">
+  <div class="card">
+    <div class="card-title">Nuevo traslado</div>
+    <label>Fecha</label>
+    <input type="date" id="t-fecha">
+    <div class="row2">
+      <div><label>Categoría</label>
+      <select id="t-cat">
+        <option>Vacas preñadas</option><option>Vacas secas</option><option>Vaquillonas</option><option>Novillos</option><option>Terneros</option><option>Terneras</option><option>Toros</option><option>Otra</option>
+      </select></div>
+      <div><label>Cantidad</label>
+      <input type="number" id="t-cant" placeholder="0" min="0" inputmode="numeric"></div>
+    </div>
+    <label>Campo origen</label>
+    <select id="t-origen" onchange="checkSame()"><option value="">— Seleccioná —</option></select>
+    <label>Campo destino</label>
+    <select id="t-destino" onchange="checkSame()"><option value="">— Seleccioná —</option></select>
+    <div id="t-warn" class="warn" style="display:none">⚠️ El origen y destino no pueden ser el mismo campo</div>
+    <label>Peso prom. (kg)</label>
+    <input type="number" id="t-peso" placeholder="Opcional" min="0" inputmode="numeric">
+    <label>Observaciones</label>
+    <textarea id="t-obs" placeholder="Motivo, condición..."></textarea>
+    <button class="btn btn-primary" id="t-btn" onclick="saveTraslado()">Guardar traslado</button>
+    <button class="btn btn-outline" id="t-cancel" style="display:none;margin-top:8px" onclick="cancelEdit('t')">Cancelar edición</button>
+  </div>
+  <div class="card">
+    <div class="list-header">
+      <span class="list-title">Historial de traslados</span>
+      <span class="badge-count" id="t-count">0</span>
+    </div>
+    <div id="t-list"><div class="empty-state">Sin traslados registrados</div></div>
+  </div>
+</div>
+
+<!-- FEEDLOT -->
+<div id="sec-feedlot" class="section">
+  <div class="sync-info">Feedlot San Julián · Recría VQ reposición BILKURA</div>
+  <div class="corrales-grid" id="corrales-grid"></div>
+  <div id="feedlot-detail-area"></div>
+  <div class="card">
+    <div class="list-header">
+      <span class="list-title">Historial de tropas</span>
+      <span class="badge-count" id="fl-hist-count">0</span>
+    </div>
+    <div id="fl-hist-list"><div class="empty-state">Sin tropas retiradas aún</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+let CAMPOS=loadObj('campo_campos_list',['El Sermon Chico','San Julian','Don Damaso','Las Flores','Feedlot Don Pancho']);
+function saveCampos(){save('campo_campos_list',CAMPOS);}
+function populateCampoSelects(){
+  [['h-campo','— Sin campo —'],['l-sector','— Sin especificar —'],['t-origen','— Seleccioná —'],['t-destino','— Seleccioná —']].forEach(([id,lbl])=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    const prev=sel.value;
+    sel.innerHTML=`<option value="">${lbl}</option>`+CAMPOS.map(c=>`<option${c===prev?' selected':''}>${c}</option>`).join('');
+  });
+}
+const editingId={h:null,g:null,l:null,t:null};
+
+function cancelEdit(sec){
+  editingId[sec]=null;
+  const labels={h:'Guardar registro',g:'Guardar',l:'Guardar',t:'Guardar traslado'};
+  document.getElementById(sec+'-btn').textContent=labels[sec];
+  document.getElementById(sec+'-cancel').style.display='none';
+  if(sec==='h'){document.getElementById('h-cant').value='';document.getElementById('h-peso').value='';document.getElementById('h-obs').value='';document.getElementById('h-nombre').value='';document.getElementById('h-tropa-feedlot').value='';document.getElementById('h-evento').value='Entrada';toggleRecatDestino();}
+  if(sec==='g'){document.getElementById('g-importe').value='';document.getElementById('g-desc').value='';}
+  if(sec==='l'){document.getElementById('l-mm').value='';document.getElementById('l-obs').value='';}
+  if(sec==='t'){document.getElementById('t-cant').value='';document.getElementById('t-peso').value='';document.getElementById('t-obs').value='';document.getElementById('t-origen').value='';document.getElementById('t-destino').value='';document.getElementById('t-warn').style.display='none';}
+}
+const CATS=['Vacas preñadas','Vacas secas','Vaquillonas','Novillos','Terneros','Terneras','Toros','Otra'];
+const EVENTOS_SUMA=['Entrada','Parto'];
+const EVENTOS_RESTA=['Salida / Venta','Muerte'];
+
+// Set today's date on all date inputs
+const today=new Date().toISOString().split('T')[0];
+['h-fecha','g-fecha','l-fecha','t-fecha'].forEach(id=>{const el=document.getElementById(id);if(el)el.value=today;});
+
+function checkSame(){
+  const o=document.getElementById('t-origen').value,d=document.getElementById('t-destino').value;
+  document.getElementById('t-warn').style.display=(o&&d&&o===d)?'block':'none';
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function switchTab(tab){
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const tabs=['stock','hacienda','gastos','lluvias','traslados','feedlot'];
+  document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
+  document.getElementById('sec-'+tab).classList.add('active');
+  if(tab==='stock')renderStock();
+  if(tab==='feedlot')renderFeedlot();
+}
+
+// localStorage helpers
+function load(key){try{return JSON.parse(localStorage.getItem(key)||'[]');}catch(e){return[];}}
+function loadObj(key,def){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;}}
+function save(key,data){localStorage.setItem(key,JSON.stringify(data));}
+
+function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
+function fmtNum(n){return Number(n).toLocaleString('es-AR');}
+
+function renderCamposMgmt(){
+  const cont=document.getElementById('campos-mgmt-list');
+  if(!cont)return;
+  cont.innerHTML=CAMPOS.map(c=>`<div class="entry-row">
+    <div class="entry-main"><div class="entry-title">${c}</div></div>
+    <button class="entry-delete" onclick="eliminarCampo('${c.replace(/'/g,"\\'")}')">×</button>
+  </div>`).join('');
+}
+function agregarCampo(){
+  const inp=document.getElementById('nuevo-campo');
+  const nombre=inp.value.trim();
+  if(!nombre){showToast('Escribí el nombre del campo');return;}
+  if(CAMPOS.includes(nombre)){showToast('Ese campo ya existe');return;}
+  CAMPOS.push(nombre);saveCampos();inp.value='';
+  populateCampoSelects();renderCamposMgmt();renderStock();
+  showToast('Campo agregado ✓');
+}
+function eliminarCampo(nombre){
+  if(!confirm('¿Eliminar el campo "'+nombre+'"? No se borran los registros históricos.'))return;
+  CAMPOS=CAMPOS.filter(c=>c!==nombre);saveCampos();
+  populateCampoSelects();renderCamposMgmt();renderStock();
+  showToast('Campo eliminado');
+}
+
+// ── STOCK ──
+function calcStock(){
+  const base=loadObj('campo_stock_base',{});
+  const hacienda=load('campo_hacienda');
+  const traslados=load('campo_traslados');
+  const s={};
+  CAMPOS.forEach(c=>{s[c]={};CATS.forEach(k=>{s[c][k]=((base[c]||{})[k])||0;});});
+  hacienda.forEach(r=>{
+    if(!r.campo||!s[r.campo])return;
+    if(EVENTOS_SUMA.includes(r.evento))s[r.campo][r.cat]=(s[r.campo][r.cat]||0)+r.cant;
+    else if(EVENTOS_RESTA.includes(r.evento))s[r.campo][r.cat]=(s[r.campo][r.cat]||0)-r.cant;
+    else if(r.evento==='Recategorización'&&r.catDestino){
+      s[r.campo][r.cat]=(s[r.campo][r.cat]||0)-r.cant;
+      s[r.campo][r.catDestino]=(s[r.campo][r.catDestino]||0)+r.cant;
+    }
+  });
+  traslados.forEach(r=>{
+    if(s[r.origen])s[r.origen][r.cat]=(s[r.origen][r.cat]||0)-r.cant;
+    if(s[r.destino])s[r.destino][r.cat]=(s[r.destino][r.cat]||0)+r.cant;
+  });
+  return s;
+}
+
+function renderStock(){
+  renderCamposMgmt();
+  const stock=calcStock();
+  let grand=0;
+  CAMPOS.forEach(c=>CATS.forEach(k=>grand+=Math.max(0,stock[c][k]||0)));
+  document.getElementById('grand-total').textContent=grand+' cab.';
+  const cont=document.getElementById('stock-campos');
+  cont.innerHTML='';
+  CAMPOS.forEach(campo=>{
+    const total=CATS.reduce((a,k)=>a+Math.max(0,stock[campo][k]||0),0);
+    const base=loadObj('campo_stock_base',{});
+    let rows='';
+    CATS.forEach(cat=>{
+      const val=Math.max(0,stock[campo][cat]||0);
+      const baseVal=((base[campo]||{})[cat])||0;
+      const eid='e_'+campo.replace(/\W/g,'_')+'_'+cat.replace(/\W/g,'_');
+      rows+=`<div class="cat-row">
+        <span class="cat-nombre">${cat}</span>
+        <span class="cat-cant">${val}</span>
+        <button class="cat-edit-btn" onclick="toggleEdit('${eid}','${campo}','${cat}',${baseVal})" aria-label="Editar">✏️</button>
+      </div>
+      <div class="edit-inline" id="${eid}">
+        <div><label style="margin-top:0;font-size:12px">Stock base (cabezas)</label>
+        <input type="number" id="inp_${eid}" value="${baseVal}" min="0" inputmode="numeric" style="font-size:15px;padding:9px 11px"></div>
+        <div style="display:flex;flex-direction:column;gap:6px;justify-content:flex-end">
+          <button class="btn btn-primary btn-sm" onclick="saveBase('${campo}','${cat}','${eid}')">Guardar</button>
+          <button class="btn btn-outline btn-sm" onclick="closeEdit('${eid}')">Cancelar</button>
+        </div>
+      </div>`;
+    });
+    const blk=document.createElement('div');
+    blk.className='campo-block';
+    blk.innerHTML=`<div class="campo-header"><span class="campo-nombre">${campo}</span><span class="campo-total-badge">${total} cab.</span></div>${rows}<div class="campo-footer"><span>Total</span><span>${total} cab.</span></div>`;
+    cont.appendChild(blk);
+  });
+}
+
+function toggleEdit(eid,campo,cat,baseVal){
+  const el=document.getElementById(eid);
+  const open=el.classList.contains('open');
+  document.querySelectorAll('.edit-inline.open').forEach(e=>e.classList.remove('open'));
+  if(!open)el.classList.add('open');
+}
+function closeEdit(eid){document.getElementById(eid).classList.remove('open');}
+function saveBase(campo,cat,eid){
+  const val=parseInt(document.getElementById('inp_'+eid).value)||0;
+  const base=loadObj('campo_stock_base',{});
+  if(!base[campo])base[campo]={};
+  base[campo][cat]=val;
+  save('campo_stock_base',base);
+  closeEdit(eid);
+  showToast('Stock base actualizado ✓');
+  renderStock();
+}
+
+// ── HACIENDA ──
+function populateTropaFeedlotSelect(){
+  const sel=document.getElementById('h-tropa-feedlot');
+  if(!sel)return;
+  const prev=sel.value;
+  const d=flLoad();
+  sel.innerHTML='<option value="">— Sin vincular —</option>';
+  [1,2,3].forEach(n=>{
+    const t=d.corrales[n];
+    if(t)sel.innerHTML+=`<option value="${n}"${String(n)===prev?' selected':''}>Corral ${n} · ${t.nombre} (${t.cant} cab.)</option>`;
+  });
+}
+function onSelectTropaFeedlot(){
+  const val=document.getElementById('h-tropa-feedlot').value;
+  if(!val)return;
+  const t=flLoad().corrales[Number(val)];
+  if(!t)return;
+  document.getElementById('h-nombre').value=t.nombre;
+  document.getElementById('h-cat').value=t.cat;
+  document.getElementById('h-campo').value='Feedlot Don Pancho';
+}
+function toggleRecatDestino(){
+  const ev=document.getElementById('h-evento').value;
+  document.getElementById('h-recat-row').style.display=ev==='Recategorización'?'block':'none';
+}
+function saveHacienda(){
+  const fecha=document.getElementById('h-fecha').value,cat=document.getElementById('h-cat').value,
+    cant=document.getElementById('h-cant').value,evento=document.getElementById('h-evento').value,
+    peso=document.getElementById('h-peso').value,obs=document.getElementById('h-obs').value,
+    campo=document.getElementById('h-campo').value,
+    nombre=document.getElementById('h-nombre').value,
+    catDestino=document.getElementById('h-cat-destino').value;
+  if(!fecha||!cant){showToast('Completá fecha y cantidad');return;}
+  if(evento==='Recategorización'&&cat===catDestino){showToast('La categoría origen y destino no pueden ser iguales');return;}
+  const rec={fecha,cat,cant:Number(cant),evento,peso:peso?Number(peso):null,obs,campo,nombre:nombre||null,catDestino:evento==='Recategorización'?catDestino:null};
+  let data=load('campo_hacienda');
+  if(editingId.h){
+    data=data.map(r=>r.id===editingId.h?{...r,...rec}:r);
+    editingId.h=null;
+    document.getElementById('h-btn').textContent='Guardar registro';
+    document.getElementById('h-cancel').style.display='none';
+    showToast('Registro actualizado ✓');
+  } else {
+    data.unshift({id:Date.now(),...rec});
+    showToast('Registro guardado ✓');
+  }
+  save('campo_hacienda',data);
+  // Sincronizar con feedlot
+  const corralLink=document.getElementById('h-tropa-feedlot').value;
+  if(corralLink&&!editingId.h){
+    const fl=flLoad();
+    const tropa=fl.corrales[Number(corralLink)];
+    if(tropa){
+      if(evento==='Pesada'&&peso){
+        tropa.pesajes.push({fecha,peso:Number(peso)});
+        showToast('Pesaje sincronizado con Feedlot ✓');
+      } else if(EVENTOS_RESTA.includes(evento)){
+        tropa.cant=Math.max(0,tropa.cant-Number(cant));
+      } else if(EVENTOS_SUMA.includes(evento)){
+        tropa.cant+=Number(cant);
+      }
+      flSave(fl);
+    }
+  }
+  document.getElementById('h-cant').value='';
+  document.getElementById('h-peso').value='';
+  document.getElementById('h-obs').value='';
+  document.getElementById('h-nombre').value='';
+  document.getElementById('h-tropa-feedlot').value='';
+  renderHacienda(data);
+}
+function editHacienda(id){
+  const r=load('campo_hacienda').find(r=>r.id===id);
+  if(!r)return;
+  editingId.h=id;
+  document.getElementById('h-fecha').value=r.fecha;
+  document.getElementById('h-cat').value=r.cat;
+  document.getElementById('h-cant').value=r.cant;
+  document.getElementById('h-evento').value=r.evento;
+  document.getElementById('h-peso').value=r.peso||'';
+  document.getElementById('h-obs').value=r.obs||'';
+  document.getElementById('h-campo').value=r.campo||'';
+  document.getElementById('h-nombre').value=r.nombre||'';
+  if(r.catDestino)document.getElementById('h-cat-destino').value=r.catDestino;
+  toggleRecatDestino();
+  document.getElementById('h-btn').textContent='Actualizar registro';
+  document.getElementById('h-cancel').style.display='block';
+  document.getElementById('sec-hacienda').scrollIntoView({behavior:'smooth'});
+}
+function deleteHacienda(id){if(!confirm('¿Borrar este registro?'))return;const data=load('campo_hacienda').filter(r=>r.id!==id);save('campo_hacienda',data);renderHacienda(data);}
+function renderHacienda(data){
+  document.getElementById('h-count').textContent=data.length;
+  const list=document.getElementById('h-list');
+  if(!data.length){list.innerHTML='<div class="empty-state">Sin registros aún</div>';return;}
+  list.innerHTML=data.map(r=>`<div class="entry-row">
+    <div class="entry-main">
+      <div class="entry-title">${r.evento} · ${r.cant} ${r.cat}${r.catDestino?' → '+r.catDestino:''}</div>
+      ${r.nombre?`<div style="font-size:12px;color:#2d6a2d;font-weight:600;margin-top:2px">🐄 ${r.nombre}</div>`:''}
+      <div class="entry-sub">${fmtDate(r.fecha)}${r.campo?' · '+r.campo:''}${r.peso?' · '+r.peso+' kg':''}${r.obs?' · '+r.obs:''}</div>
+    </div>
+    <div class="entry-actions">
+      <button class="entry-edit" onclick="editHacienda(${r.id})">✏️</button>
+      <button class="entry-delete" onclick="deleteHacienda(${r.id})">×</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── GASTOS ──
+function saveGasto(){
+  const fecha=document.getElementById('g-fecha').value,tipo=document.getElementById('g-tipo').value,
+    rubro=document.getElementById('g-rubro').value,importe=document.getElementById('g-importe').value,
+    desc=document.getElementById('g-desc').value;
+  if(!fecha||!importe){showToast('Completá fecha e importe');return;}
+  const rec={fecha,tipo,rubro,importe:Number(importe),desc};
+  let data=load('campo_gastos');
+  if(editingId.g){
+    data=data.map(r=>r.id===editingId.g?{...r,...rec}:r);
+    editingId.g=null;
+    document.getElementById('g-btn').textContent='Guardar';
+    document.getElementById('g-cancel').style.display='none';
+    showToast('Registro actualizado ✓');
+  } else {
+    data.unshift({id:Date.now(),...rec});
+    showToast('Registro guardado ✓');
+  }
+  save('campo_gastos',data);
+  document.getElementById('g-importe').value='';
+  document.getElementById('g-desc').value='';
+  renderGastos(data);
+}
+function editGasto(id){
+  const r=load('campo_gastos').find(r=>r.id===id);
+  if(!r)return;
+  editingId.g=id;
+  document.getElementById('g-fecha').value=r.fecha;
+  document.getElementById('g-tipo').value=r.tipo;
+  document.getElementById('g-rubro').value=r.rubro;
+  document.getElementById('g-importe').value=r.importe;
+  document.getElementById('g-desc').value=r.desc||'';
+  document.getElementById('g-btn').textContent='Actualizar';
+  document.getElementById('g-cancel').style.display='block';
+  document.getElementById('sec-gastos').scrollIntoView({behavior:'smooth'});
+}
+function deleteGasto(id){if(!confirm('¿Borrar este registro?'))return;const data=load('campo_gastos').filter(r=>r.id!==id);save('campo_gastos',data);renderGastos(data);}
+function renderGastos(data){
+  document.getElementById('g-count').textContent=data.length;
+  const list=document.getElementById('g-list');
+  const res=document.getElementById('g-resumen');
+  if(!data.length){list.innerHTML='<div class="empty-state">Sin registros aún</div>';res.style.display='none';return;}
+  const totIng=data.filter(r=>r.tipo==='ingreso').reduce((a,r)=>a+r.importe,0);
+  const totEg=data.filter(r=>r.tipo==='egreso').reduce((a,r)=>a+r.importe,0);
+  res.style.display='block';
+  document.getElementById('g-tot-ing').textContent='$'+fmtNum(totIng);
+  document.getElementById('g-tot-eg').textContent='$'+fmtNum(totEg);
+  list.innerHTML=data.map(r=>`<div class="entry-row">
+    <div class="entry-main">
+      <div class="entry-title ${r.tipo==='ingreso'?'ing':'eg'}">${r.tipo==='ingreso'?'▲':'▼'} $${fmtNum(r.importe)} · ${r.rubro}</div>
+      <div class="entry-sub">${fmtDate(r.fecha)}${r.desc?' · '+r.desc:''}</div>
+    </div>
+    <div class="entry-actions">
+      <button class="entry-edit" onclick="editGasto(${r.id})">✏️</button>
+      <button class="entry-delete" onclick="deleteGasto(${r.id})">×</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── LLUVIAS ──
+function saveLluvia(){
+  const fecha=document.getElementById('l-fecha').value,mm=document.getElementById('l-mm').value,
+    sector=document.getElementById('l-sector').value,obs=document.getElementById('l-obs').value;
+  if(!fecha||!mm){showToast('Completá fecha y milímetros');return;}
+  const rec={fecha,mm:Number(mm),sector,obs};
+  let data=load('campo_lluvias');
+  if(editingId.l){
+    data=data.map(r=>r.id===editingId.l?{...r,...rec}:r);
+    editingId.l=null;
+    document.getElementById('l-btn').textContent='Guardar';
+    document.getElementById('l-cancel').style.display='none';
+    showToast('Registro actualizado ✓');
+  } else {
+    data.unshift({id:Date.now(),...rec});
+    showToast('Registro guardado ✓');
+  }
+  save('campo_lluvias',data);
+  document.getElementById('l-mm').value='';
+  document.getElementById('l-obs').value='';
+  renderLluvias(data);
+}
+function editLluvia(id){
+  const r=load('campo_lluvias').find(r=>r.id===id);
+  if(!r)return;
+  editingId.l=id;
+  document.getElementById('l-fecha').value=r.fecha;
+  document.getElementById('l-mm').value=r.mm;
+  document.getElementById('l-sector').value=r.sector||'';
+  document.getElementById('l-obs').value=r.obs||'';
+  document.getElementById('l-btn').textContent='Actualizar';
+  document.getElementById('l-cancel').style.display='block';
+  document.getElementById('sec-lluvias').scrollIntoView({behavior:'smooth'});
+}
+function deleteLluvia(id){if(!confirm('¿Borrar este registro?'))return;const data=load('campo_lluvias').filter(r=>r.id!==id);save('campo_lluvias',data);renderLluvias(data);}
+function renderLluvias(data){
+  document.getElementById('l-count').textContent=data.length;
+  const list=document.getElementById('l-list');
+  if(!data.length){list.innerHTML='<div class="empty-state">Sin registros aún</div>';return;}
+  const total=data.reduce((a,r)=>a+r.mm,0);
+  list.innerHTML=`<div style="text-align:center;padding:8px 0 12px;font-size:14px;color:#666">Acumulado: <strong style="color:#1a1a1a">${total.toFixed(1)} mm</strong></div>`+
+    data.map(r=>`<div class="entry-row">
+    <div class="entry-main">
+      <div class="entry-title">${r.mm} mm${r.sector?' · '+r.sector:''}</div>
+      <div class="entry-sub">${fmtDate(r.fecha)}${r.obs?' · '+r.obs:''}</div>
+    </div>
+    <div class="entry-actions">
+      <button class="entry-edit" onclick="editLluvia(${r.id})">✏️</button>
+      <button class="entry-delete" onclick="deleteLluvia(${r.id})">×</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── TRASLADOS ──
+function saveTraslado(){
+  const fecha=document.getElementById('t-fecha').value,cat=document.getElementById('t-cat').value,
+    cant=document.getElementById('t-cant').value,origen=document.getElementById('t-origen').value,
+    destino=document.getElementById('t-destino').value,peso=document.getElementById('t-peso').value,
+    obs=document.getElementById('t-obs').value;
+  if(!fecha||!cant||!origen||!destino){showToast('Completá todos los campos requeridos');return;}
+  if(origen===destino){showToast('Origen y destino deben ser distintos');return;}
+  const rec={fecha,cat,cant:Number(cant),origen,destino,peso:peso?Number(peso):null,obs};
+  let data=load('campo_traslados');
+  if(editingId.t){
+    data=data.map(r=>r.id===editingId.t?{...r,...rec}:r);
+    editingId.t=null;
+    document.getElementById('t-btn').textContent='Guardar traslado';
+    document.getElementById('t-cancel').style.display='none';
+    showToast('Traslado actualizado ✓');
+  } else {
+    data.unshift({id:Date.now(),...rec});
+    showToast('Traslado guardado ✓');
+  }
+  save('campo_traslados',data);
+  document.getElementById('t-cant').value='';
+  document.getElementById('t-peso').value='';
+  document.getElementById('t-obs').value='';
+  document.getElementById('t-origen').value='';
+  document.getElementById('t-destino').value='';
+  document.getElementById('t-warn').style.display='none';
+  renderTraslados(data);
+}
+function editTraslado(id){
+  const r=load('campo_traslados').find(r=>r.id===id);
+  if(!r)return;
+  editingId.t=id;
+  document.getElementById('t-fecha').value=r.fecha;
+  document.getElementById('t-cat').value=r.cat;
+  document.getElementById('t-cant').value=r.cant;
+  document.getElementById('t-origen').value=r.origen;
+  document.getElementById('t-destino').value=r.destino;
+  document.getElementById('t-peso').value=r.peso||'';
+  document.getElementById('t-obs').value=r.obs||'';
+  document.getElementById('t-btn').textContent='Actualizar traslado';
+  document.getElementById('t-cancel').style.display='block';
+  document.getElementById('sec-traslados').scrollIntoView({behavior:'smooth'});
+}
+function deleteTraslado(id){if(!confirm('¿Borrar este traslado?'))return;const data=load('campo_traslados').filter(r=>r.id!==id);save('campo_traslados',data);renderTraslados(data);}
+function renderTraslados(data){
+  document.getElementById('t-count').textContent=data.length;
+  const list=document.getElementById('t-list');
+  if(!data.length){list.innerHTML='<div class="empty-state">Sin traslados registrados</div>';return;}
+  list.innerHTML=data.map(r=>`<div class="entry-row">
+    <div class="entry-main">
+      <div class="entry-title arrow-txt">${r.cant} ${r.cat}</div>
+      <div class="traslado-ruta">${r.origen} → ${r.destino}</div>
+      <div class="entry-sub">${fmtDate(r.fecha)}${r.peso?' · '+r.peso+' kg':''}${r.obs?' · '+r.obs:''}</div>
+    </div>
+    <div class="entry-actions">
+      <button class="entry-edit" onclick="editTraslado(${r.id})">✏️</button>
+      <button class="entry-delete" onclick="deleteTraslado(${r.id})">×</button>
+    </div>
+  </div>`).join('');
+}
+
+// ── FEEDLOT ──
+function flLoad(){return loadObj('campo_feedlot',{corrales:{1:null,2:null,3:null},historial:[]});}
+function flSave(d){save('campo_feedlot',d);}
+
+function diasEncierro(fechaEntrada){
+  const d=Math.floor((new Date()-new Date(fechaEntrada))/(1000*60*60*24));
+  return Math.max(0,d);
+}
+function calcGMD(tropa){
+  if(!tropa.pesajes||!tropa.pesajes.length)return null;
+  const ultimo=tropa.pesajes[tropa.pesajes.length-1];
+  const dias=Math.floor((new Date(ultimo.fecha)-new Date(tropa.fechaEntrada))/(1000*60*60*24));
+  if(dias<=0)return null;
+  return ((ultimo.peso-tropa.pesoInicial)/dias).toFixed(3);
+}
+function pesoActual(tropa){
+  if(!tropa.pesajes||!tropa.pesajes.length)return tropa.pesoInicial;
+  return tropa.pesajes[tropa.pesajes.length-1].peso;
+}
+
+let flCorralAbierto=null;
+
+function renderCorralMap(d){
+  const W=360,H=220;
+  const corrDefs=[
+    {n:1,x:8, y:50,w:108,h:150},
+    {n:2,x:126,y:50,w:108,h:150},
+    {n:3,x:244,y:50,w:108,h:150}
+  ];
+  let s=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;border-radius:8px">`;
+  // Fondo general tierra
+  s+=`<rect width="${W}" height="${H}" fill="#d6c9a8" rx="8"/>`;
+  // Calle de alimentación (arriba)
+  s+=`<rect x="0" y="0" width="${W}" height="44" fill="#c2b48e" rx="8"/>`;
+  s+=`<rect x="0" y="36" width="${W}" height="8" fill="#b5a57e"/>`;
+  s+=`<text x="${W/2}" y="26" text-anchor="middle" font-size="10" fill="#7a6a50" font-weight="600" font-family="-apple-system,sans-serif">◀  CALLE DE ALIMENTACIÓN  ▶</text>`;
+  // Camino inferior acceso
+  s+=`<rect x="0" y="${H-18}" width="${W}" height="18" fill="#c2b48e"/>`;
+  s+=`<text x="${W/2}" y="${H-5}" text-anchor="middle" font-size="9" fill="#8a7a60" font-family="-apple-system,sans-serif">▼  PORTONES DE ACCESO  ▼</text>`;
+
+  corrDefs.forEach(({n,x,y,w,h})=>{
+    const t=d.corrales[n];
+    const ocu=!!t;
+    const sel=flCorralAbierto===n;
+    const fillCorral=ocu?'#b8d4b0':'#c8bb9a';
+    const strokeCorral=ocu?'#2d6a2d':'#8a7a5a';
+    // Sombra leve
+    s+=`<rect x="${x+3}" y="${y+3}" width="${w}" height="${h}" fill="#00000018" rx="3"/>`;
+    // Piso corral
+    s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fillCorral}" stroke="${strokeCorral}" stroke-width="${sel?3:1.5}" rx="3" onclick="toggleCorral(${n})" style="cursor:pointer"/>`;
+    // Comedero (franja arriba dentro del corral)
+    s+=`<rect x="${x}" y="${y}" width="${w}" height="10" fill="#a89870" stroke="${strokeCorral}" stroke-width="1" rx="2"/>`;
+    s+=`<text x="${x+w/2}" y="${y+8}" text-anchor="middle" font-size="6" fill="#5a4a30" font-family="-apple-system,sans-serif">COMEDERO</text>`;
+    // Bebedero (círculo inferior derecha)
+    s+=`<ellipse cx="${x+w-20}" cy="${y+h-22}" rx="14" ry="9" fill="#7ab8d8" stroke="#4a8ab0" stroke-width="1.5"/>`;
+    s+=`<text x="${x+w-20}" y="${y+h-19}" text-anchor="middle" font-size="5.5" fill="#1a5a80" font-family="-apple-system,sans-serif">BEBEDERO</text>`;
+    // Portón inferior (centro)
+    s+=`<rect x="${x+w/2-14}" y="${y+h-5}" width="28" height="7" fill="#8a7a50" rx="2" stroke="#6a5a40" stroke-width="1"/>`;
+    // Líneas de alambrado internas (textura)
+    for(let i=1;i<3;i++){
+      s+=`<line x1="${x}" y1="${y+h*i/3}" x2="${x+w}" y2="${y+h*i/3}" stroke="${strokeCorral}" stroke-width="0.4" stroke-dasharray="4,4" opacity="0.4"/>`;
+    }
+    // Selección
+    if(sel) s+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="none" stroke="#1a4a1a" stroke-width="2.5" stroke-dasharray="6,3" rx="3"/>`;
+    // Número de corral
+    s+=`<text x="${x+w/2}" y="${y+24}" text-anchor="middle" font-size="13" font-weight="700" fill="${ocu?'#1a4a1a':'#5a4a2a'}" font-family="-apple-system,sans-serif" onclick="toggleCorral(${n})" style="cursor:pointer">Corral ${n}</text>`;
+
+    if(ocu){
+      const dias=diasEncierro(t.fechaEntrada);
+      const gmd=calcGMD(t);
+      const nombre=t.nombre.length>15?t.nombre.substring(0,14)+'…':t.nombre;
+      const gmdColor=gmd!=null?(Number(gmd)>=0?'#1a6a1a':'#c0392b'):'#888';
+      s+=`<text x="${x+w/2}" y="${y+38}" text-anchor="middle" font-size="8.5" font-weight="600" fill="#1a4a1a" font-family="-apple-system,sans-serif">${nombre}</text>`;
+      s+=`<text x="${x+w/2}" y="${y+52}" text-anchor="middle" font-size="11" font-weight="700" fill="#1a1a1a" font-family="-apple-system,sans-serif">${t.cant} cab.</text>`;
+      s+=`<text x="${x+w/2}" y="${y+66}" text-anchor="middle" font-size="9" fill="#444" font-family="-apple-system,sans-serif">${dias} días</text>`;
+      if(gmd!=null){
+        s+=`<rect x="${x+w/2-28}" y="${y+72}" width="56" height="18" fill="${Number(gmd)>=0?'#d0ead0':'#fde8e8'}" rx="9"/>`;
+        s+=`<text x="${x+w/2}" y="${y+83}" text-anchor="middle" font-size="9.5" font-weight="700" fill="${gmdColor}" font-family="-apple-system,sans-serif">GMD ${gmd} kg</text>`;
+      }
+    } else {
+      s+=`<text x="${x+w/2}" y="${y+60}" text-anchor="middle" font-size="12" fill="#a0906a" font-family="-apple-system,sans-serif">Vacío</text>`;
+      s+=`<text x="${x+w/2}" y="${y+76}" text-anchor="middle" font-size="9" fill="#b8a87a" font-family="-apple-system,sans-serif">Toque para ingresar</text>`;
+    }
+  });
+  // Leyenda
+  s+=`<rect x="8" y="${H-16}" width="10" height="8" fill="#b8d4b0" stroke="#2d6a2d" stroke-width="1" rx="1"/>`;
+  s+=`<text x="22" y="${H-9}" font-size="8" fill="#5a4a30" font-family="-apple-system,sans-serif">Ocupado</text>`;
+  s+=`<rect x="80" y="${H-16}" width="10" height="8" fill="#c8bb9a" stroke="#8a7a5a" stroke-width="1" rx="1"/>`;
+  s+=`<text x="94" y="${H-9}" font-size="8" fill="#5a4a30" font-family="-apple-system,sans-serif">Vacío</text>`;
+  s+='</svg>';
+  return s;
+}
+
+function renderFeedlot(){
+  const d=flLoad();
+  const grid=document.getElementById('corrales-grid');
+  grid.innerHTML=renderCorralMap(d);
+  // Detail
+  renderFeedlotDetail(d);
+  populateTropaFeedlotSelect();
+  // Historial
+  const hist=d.historial||[];
+  document.getElementById('fl-hist-count').textContent=hist.length;
+  const hl=document.getElementById('fl-hist-list');
+  if(!hist.length){hl.innerHTML='<div class="empty-state">Sin tropas retiradas aún</div>';return;}
+  hl.innerHTML=hist.slice().reverse().map(t=>{
+    const dias=Math.floor((new Date(t.fechaSalida)-new Date(t.fechaEntrada))/(1000*60*60*24));
+    const gmd=calcGMD(t);
+    return `<div class="entry-row">
+      <div class="entry-main">
+        <div class="entry-title">${t.nombre} · Corral ${t.corral}</div>
+        <div class="entry-sub">${fmtDate(t.fechaEntrada)} → ${fmtDate(t.fechaSalida)} · ${dias} días${gmd?' · GMD '+gmd+' kg':''}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCorral(n){
+  flCorralAbierto=flCorralAbierto===n?null:n;
+  renderFeedlot();
+}
+
+function renderFeedlotDetail(d){
+  const area=document.getElementById('feedlot-detail-area');
+  if(flCorralAbierto===null){area.innerHTML='';return;}
+  const n=flCorralAbierto;
+  const t=d.corrales[n];
+  if(!t){
+    // Formulario ingreso
+    area.innerHTML=`<div class="fl-detail">
+      <div class="fl-detail-hdr"><span class="fl-detail-title">Corral ${n} — Ingresar tropa</span></div>
+      <div class="fl-detail-body">
+        <label>Nombre de tropa</label>
+        <input type="text" id="fl-nombre" placeholder="Ej: VQ Reposición Lote 3">
+        <label>Categoría</label>
+        <select id="fl-cat">${['Vaquillonas','Novillos','Terneros','Terneras','Vacas preñadas','Vacas secas','Toros','Otra'].map(c=>`<option>${c}</option>`).join('')}</select>
+        <div class="row2">
+          <div><label>Cantidad (cab.)</label><input type="number" id="fl-cant" placeholder="0" min="0" inputmode="numeric"></div>
+          <div><label>Fecha entrada</label><input type="date" id="fl-fecha-ent" value="${today}"></div>
+        </div>
+        <label>Peso vivo inicial promedio (kg)</label>
+        <input type="number" id="fl-peso-ini" placeholder="0" min="0" inputmode="decimal">
+        <label>Observaciones</label>
+        <textarea id="fl-obs" placeholder="Origen, condición, etc..."></textarea>
+        <button class="btn btn-primary" onclick="flIngresarTropa(${n})" style="margin-top:14px">Ingresar al corral</button>
+        <button class="btn btn-outline" onclick="toggleCorral(${n})" style="margin-top:8px">Cancelar</button>
+      </div>
+    </div>`;
+    return;
+  }
+  // Detalle tropa existente
+  const dias=diasEncierro(t.fechaEntrada);
+  const gmd=calcGMD(t);
+  const pAct=pesoActual(t);
+  const ganTotal=t.pesajes&&t.pesajes.length?((pAct-t.pesoInicial)*t.cant).toFixed(0):null;
+  const pesajesHtml=t.pesajes&&t.pesajes.length
+    ?t.pesajes.map((p,i)=>`<div class="pesaje-item">
+        <span>${fmtDate(p.fecha)} · ${p.peso} kg/cab</span>
+        <button onclick="flDeletePesaje(${n},${i})" style="background:none;border:none;color:#ccc;cursor:pointer;font-size:18px;padding:0 2px">×</button>
+      </div>`).join('')
+    :'<div style="font-size:13px;color:#aaa;padding:6px 0">Sin pesajes registrados</div>';
+  area.innerHTML=`<div class="fl-detail">
+    <div class="fl-detail-hdr">
+      <span class="fl-detail-title">Corral ${n} · ${t.nombre}</span>
+      <span style="font-size:12px;opacity:.8">${t.cat}</span>
+    </div>
+    <div class="fl-detail-body">
+      <div class="stat-row"><span class="stat-label">Cabezas</span><span class="stat-val">${t.cant}</span></div>
+      <div class="stat-row"><span class="stat-label">Fecha entrada</span><span class="stat-val">${fmtDate(t.fechaEntrada)}</span></div>
+      <div class="stat-row"><span class="stat-label">Días de encierro</span><span class="stat-val">${dias} días</span></div>
+      <div class="stat-row"><span class="stat-label">Peso inicial prom.</span><span class="stat-val">${t.pesoInicial} kg/cab</span></div>
+      <div class="stat-row"><span class="stat-label">Último peso prom.</span><span class="stat-val">${pAct} kg/cab</span></div>
+      <div class="stat-row"><span class="stat-label">GMD</span><span class="stat-val" style="color:${gmd&&Number(gmd)>=0?'#2d6a2d':'#c0392b'}">${gmd!=null?gmd+' kg/día/cab':'— (sin pesajes)'}</span></div>
+      ${ganTotal!=null?`<div class="stat-row"><span class="stat-label">Ganancia total tropa</span><span class="stat-val">${Number(ganTotal)>=0?'+':''}${ganTotal} kg</span></div>`:''}
+      ${t.obs?`<div class="stat-row"><span class="stat-label">Obs.</span><span class="stat-val" style="font-weight:400;font-size:13px">${t.obs}</span></div>`:''}
+      <div style="margin-top:14px;font-size:13px;font-weight:600;color:#444;margin-bottom:6px">Historial de pesajes</div>
+      ${pesajesHtml}
+      <div class="row2" style="margin-top:12px">
+        <div><label style="margin-top:0">Nuevo peso (kg/cab)</label><input type="number" id="fl-nuevo-peso" placeholder="0" min="0" inputmode="decimal"></div>
+        <div><label style="margin-top:0">Fecha</label><input type="date" id="fl-nuevo-fecha" value="${today}"></div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="flRegistrarPesaje(${n})">Registrar pesaje</button>
+      <button class="btn btn-outline" onclick="flRetirarTropa(${n})" style="margin-top:8px;color:#c0392b;border-color:#c0392b">Retirar tropa del corral</button>
+      <button class="btn btn-outline" onclick="toggleCorral(${n})" style="margin-top:8px">Cerrar</button>
+    </div>
+  </div>`;
+}
+
+function flIngresarTropa(n){
+  const nombre=document.getElementById('fl-nombre').value.trim();
+  const cat=document.getElementById('fl-cat').value;
+  const cant=document.getElementById('fl-cant').value;
+  const fecha=document.getElementById('fl-fecha-ent').value;
+  const peso=document.getElementById('fl-peso-ini').value;
+  const obs=document.getElementById('fl-obs').value;
+  if(!nombre||!cant||!fecha||!peso){showToast('Completá todos los campos obligatorios');return;}
+  const d=flLoad();
+  d.corrales[n]={id:Date.now(),corral:n,nombre,cat,cant:Number(cant),fechaEntrada:fecha,pesoInicial:Number(peso),pesajes:[],obs};
+  flSave(d);
+  showToast('Tropa ingresada al corral '+n+' ✓');
+  renderFeedlot();
+}
+
+function flRegistrarPesaje(n){
+  const peso=document.getElementById('fl-nuevo-peso').value;
+  const fecha=document.getElementById('fl-nuevo-fecha').value;
+  if(!peso||!fecha){showToast('Completá peso y fecha');return;}
+  const d=flLoad();
+  if(!d.corrales[n])return;
+  d.corrales[n].pesajes.push({fecha,peso:Number(peso)});
+  flSave(d);
+  showToast('Pesaje registrado ✓');
+  renderFeedlot();
+}
+
+function flDeletePesaje(n,idx){
+  if(!confirm('¿Borrar este pesaje?'))return;
+  const d=flLoad();
+  d.corrales[n].pesajes.splice(idx,1);
+  flSave(d);
+  renderFeedlot();
+}
+
+function flRetirarTropa(n){
+  if(!confirm('¿Retirar la tropa del Corral '+n+'? Se archiva en el historial.'))return;
+  const d=flLoad();
+  const t=d.corrales[n];
+  if(!t)return;
+  t.fechaSalida=today;
+  if(!d.historial)d.historial=[];
+  d.historial.push(t);
+  d.corrales[n]=null;
+  flSave(d);
+  flCorralAbierto=null;
+  showToast('Tropa retirada y archivada ✓');
+  renderFeedlot();
+}
+
+// INIT
+populateCampoSelects();
+populateTropaFeedlotSelect();
+renderStock();
+renderHacienda(load('campo_hacienda'));
+renderGastos(load('campo_gastos'));
+renderLluvias(load('campo_lluvias'));
+renderTraslados(load('campo_traslados'));
+</script>
+</body>
+</html>
