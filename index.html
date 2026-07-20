@@ -175,6 +175,13 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
     <input type="text" id="h-nombre" placeholder="Ej: Terneras destete 2025 (opcional)">
     <label>Campo</label>
     <select id="h-campo"><option value="">— Sin campo —</option></select>
+    <label>Propietario</label>
+    <select id="h-propietario">
+      <option value="">— Sin especificar —</option>
+      <option>BILKURA</option>
+      <option>Lartirigoyen</option>
+      <option>Compartido</option>
+    </select>
     <label>Observaciones</label>
     <textarea id="h-obs" placeholder="Opcional..."></textarea>
     <button class="btn btn-primary" id="h-btn" onclick="saveHacienda()">Guardar registro</button>
@@ -300,7 +307,12 @@ select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/
 <div class="toast" id="toast"></div>
 
 <script>
-let CAMPOS=loadObj('campo_campos_list',['El Sermon Chico','San Julian','Don Damaso','Las Flores','Feedlot Don Pancho']);
+let CAMPOS=loadObj('campo_campos_list',['El Sermon Chico','San Julian','Don Damaso','La Alegria','Feedlot Don Pancho']);
+// Migración: renombrar Las Flores → La Alegria
+(function(){
+  const idx=CAMPOS.indexOf('Las Flores');
+  if(idx!==-1){CAMPOS[idx]='La Alegria';save('campo_campos_list',CAMPOS);}
+})();
 function saveCampos(){save('campo_campos_list',CAMPOS);}
 function populateCampoSelects(){
   [['h-campo','— Sin campo —'],['l-sector','— Sin especificar —'],['t-origen','— Seleccioná —'],['t-destino','— Seleccioná —']].forEach(([id,lbl])=>{
@@ -357,6 +369,21 @@ function save(key,data){localStorage.setItem(key,JSON.stringify(data));}
 function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
 function fmtNum(n){return Number(n).toLocaleString('es-AR');}
 
+function calcStockDetalladoPorPropietario(campo){
+  const hacienda=load('campo_hacienda');
+  const result={};
+  hacienda.filter(r=>r.campo===campo).forEach(r=>{
+    const p=r.propietario||'Sin especificar';
+    if(!result[p]){result[p]={};CATS.forEach(k=>result[p][k]=0);}
+    if(EVENTOS_SUMA.includes(r.evento))result[p][r.cat]=(result[p][r.cat]||0)+r.cant;
+    else if(EVENTOS_RESTA.includes(r.evento))result[p][r.cat]=(result[p][r.cat]||0)-r.cant;
+    else if(r.evento==='Recategorización'&&r.catDestino){
+      result[p][r.cat]=(result[p][r.cat]||0)-r.cant;
+      result[p][r.catDestino]=(result[p][r.catDestino]||0)+r.cant;
+    }
+  });
+  return result;
+}
 function renderCamposMgmt(){
   const cont=document.getElementById('campos-mgmt-list');
   if(!cont)return;
@@ -434,9 +461,39 @@ function renderStock(){
         </div>
       </div>`;
     });
+    let contenido='';
+    if(campo==='La Alegria'){
+      const detalle=calcStockDetalladoPorPropietario(campo);
+      const orden=['BILKURA','Lartirigoyen','Compartido','Sin especificar'];
+      const propColors={'BILKURA':'#1a5fa8','Lartirigoyen':'#8b2500','Compartido':'#2d6a2d','Sin especificar':'#888'};
+      const propBg={'BILKURA':'#e8f0fc','Lartirigoyen':'#fceee8','Compartido':'#e8f5e8','Sin especificar':'#f5f5f0'};
+      orden.forEach(prop=>{
+        if(!detalle[prop])return;
+        const propTotal=CATS.reduce((a,k)=>a+Math.max(0,detalle[prop][k]||0),0);
+        if(propTotal===0)return;
+        const color=propColors[prop]||'#555';
+        const bg=propBg[prop]||'#f5f5f0';
+        contenido+=`<div style="border-top:2px solid ${color}20">
+          <div style="padding:9px 16px;display:flex;justify-content:space-between;align-items:center;background:${bg}">
+            <span style="font-size:13px;font-weight:700;color:${color}">${prop}</span>
+            <span style="font-size:12px;font-weight:600;color:${color};background:${color}18;padding:2px 10px;border-radius:20px">${propTotal} cab.</span>
+          </div>`;
+        CATS.forEach(cat=>{
+          const val=Math.max(0,detalle[prop][cat]||0);
+          if(val===0)return;
+          contenido+=`<div class="cat-row" style="padding-left:24px">
+            <span class="cat-nombre">${cat}</span>
+            <span class="cat-cant">${val}</span>
+          </div>`;
+        });
+        contenido+='</div>';
+      });
+    } else {
+      contenido=rows;
+    }
     const blk=document.createElement('div');
     blk.className='campo-block';
-    blk.innerHTML=`<div class="campo-header"><span class="campo-nombre">${campo}</span><span class="campo-total-badge">${total} cab.</span></div>${rows}<div class="campo-footer"><span>Total</span><span>${total} cab.</span></div>`;
+    blk.innerHTML=`<div class="campo-header"><span class="campo-nombre">${campo}</span><span class="campo-total-badge">${total} cab.</span></div>${contenido}<div class="campo-footer"><span>Total</span><span>${total} cab.</span></div>`;
     cont.appendChild(blk);
   });
 }
@@ -493,7 +550,8 @@ function saveHacienda(){
     catDestino=document.getElementById('h-cat-destino').value;
   if(!fecha||!cant){showToast('Completá fecha y cantidad');return;}
   if(evento==='Recategorización'&&cat===catDestino){showToast('La categoría origen y destino no pueden ser iguales');return;}
-  const rec={fecha,cat,cant:Number(cant),evento,peso:peso?Number(peso):null,obs,campo,nombre:nombre||null,catDestino:evento==='Recategorización'?catDestino:null};
+  const propietario=document.getElementById('h-propietario').value;
+  const rec={fecha,cat,cant:Number(cant),evento,peso:peso?Number(peso):null,obs,campo,nombre:nombre||null,catDestino:evento==='Recategorización'?catDestino:null,propietario:propietario||null};
   let data=load('campo_hacienda');
   if(editingId.h){
     data=data.map(r=>r.id===editingId.h?{...r,...rec}:r);
@@ -528,6 +586,7 @@ function saveHacienda(){
   document.getElementById('h-obs').value='';
   document.getElementById('h-nombre').value='';
   document.getElementById('h-tropa-feedlot').value='';
+  document.getElementById('h-propietario').value='';
   renderHacienda(data);
 }
 function editHacienda(id){
@@ -542,6 +601,7 @@ function editHacienda(id){
   document.getElementById('h-obs').value=r.obs||'';
   document.getElementById('h-campo').value=r.campo||'';
   document.getElementById('h-nombre').value=r.nombre||'';
+  document.getElementById('h-propietario').value=r.propietario||'';
   if(r.catDestino)document.getElementById('h-cat-destino').value=r.catDestino;
   toggleRecatDestino();
   document.getElementById('h-btn').textContent='Actualizar registro';
@@ -557,7 +617,7 @@ function renderHacienda(data){
     <div class="entry-main">
       <div class="entry-title">${r.evento} · ${r.cant} ${r.cat}${r.catDestino?' → '+r.catDestino:''}</div>
       ${r.nombre?`<div style="font-size:12px;color:#2d6a2d;font-weight:600;margin-top:2px">🐄 ${r.nombre}</div>`:''}
-      <div class="entry-sub">${fmtDate(r.fecha)}${r.campo?' · '+r.campo:''}${r.peso?' · '+r.peso+' kg':''}${r.obs?' · '+r.obs:''}</div>
+      <div class="entry-sub">${fmtDate(r.fecha)}${r.campo?' · '+r.campo:''}${r.propietario?' · <strong>'+r.propietario+'</strong>':''}${r.peso?' · '+r.peso+' kg':''}${r.obs?' · '+r.obs:''}</div>
     </div>
     <div class="entry-actions">
       <button class="entry-edit" onclick="editHacienda(${r.id})">✏️</button>
