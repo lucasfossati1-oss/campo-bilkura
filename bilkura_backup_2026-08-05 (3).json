@@ -1,0 +1,427 @@
+{
+  "campo_hacienda": [
+    {
+      "campo": "La Alegria",
+      "cant": 1,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-08-05",
+      "id": 1785955628839,
+      "obs": "Viaje de Ávila. Compra de larti",
+      "peso": 205,
+      "propietario": "Lartirigoyen"
+    },
+    {
+      "campo": "San Julian",
+      "cant": 1,
+      "cat": "Vacas preñadas",
+      "evento": "Muerte",
+      "fecha": "2026-08-03",
+      "id": 1785764316352,
+      "nombre": "Vaca prenada",
+      "obs": "Se muere sibn causa aparentemente. No llegamos abrir y a hacer necropsia porque nestor se lo dio a los chanchos",
+      "peso": 450,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 70,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-29",
+      "id": 1785411122384,
+      "nombre": "Solanet-Ayacucho-Larti",
+      "obs": "kg totales15880. Duart. Ayacucho-solanet.",
+      "peso": 226,
+      "propietario": "Lartirigoyen"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 69,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-29",
+      "id": 1785410937721,
+      "nombre": "Solanet-Ayacucho",
+      "obs": "Duart. Solanet Ayacucho. 15640KG",
+      "peso": 226,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 70,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-27",
+      "id": 1785410634225,
+      "nombre": "VITTORI-Tornquist",
+      "obs": "1422kg totales. Nacho Biaus. ",
+      "peso": 203,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 70,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-22",
+      "id": 1785410500525,
+      "nombre": "AJ.Mendizabal",
+      "obs": "Biaus . 1230KG tot = 176kg",
+      "peso": 176,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "San Julian",
+      "cant": 1,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-17",
+      "id": 1785173597856,
+      "nombre": "VQ REPOSICION 230",
+      "obs": "Muere por acidosis el domingo que no esta nestor.",
+      "peso": 230,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 111,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-17",
+      "id": 1784806386237,
+      "nombre": "Fernandez-Larti",
+      "obs": "Biaus. Avila",
+      "peso": 216,
+      "propietario": "Lartirigoyen"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 111,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-17",
+      "id": 1784806339366,
+      "nombre": "Fernandez",
+      "obs": "BIAUS. Avila.",
+      "peso": 216,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "El Sermon Chico",
+      "cant": 1,
+      "cat": "Terneros",
+      "evento": "Muerte",
+      "fecha": "2026-07-17",
+      "id": 1784805999361,
+      "nombre": "VQrepo",
+      "obs": "Mal pario",
+      "peso": 85
+    },
+    {
+      "campo": "El Sermon Chico",
+      "cant": 4,
+      "cat": "Terneros",
+      "evento": "Parto",
+      "fecha": "2026-07-17",
+      "id": 1784805864987,
+      "nombre": "VQ reposicion1era paricion",
+      "obs": "",
+      "peso": 85
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 97,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-17",
+      "id": 1784805721601,
+      "nombre": "RecaldeVQ",
+      "obs": "Larti_oromi, Avila",
+      "peso": 230,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 64,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-07",
+      "id": 1784571224641,
+      "nombre": "Mendizabal-larti",
+      "obs": "Primer viaje. Avila.",
+      "peso": 230,
+      "propietario": "Lartirigoyen"
+    },
+    {
+      "campo": "La Alegria",
+      "cant": 65,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-07-07",
+      "id": 1784571145769,
+      "nombre": "Mendizabal",
+      "obs": "65 llevo el ruso",
+      "peso": 230,
+      "propietario": "BILKURA"
+    },
+    {
+      "campo": "San Julian",
+      "cant": 58,
+      "cat": "Vacas preñadas",
+      "catDestino": "Vacas secas",
+      "evento": "Recategorización",
+      "fecha": "2026-05-18",
+      "id": 1784565877614,
+      "nombre": "Vaca prenada",
+      "obs": "",
+      "peso": 450
+    },
+    {
+      "campo": "San Julian",
+      "cant": 12,
+      "cat": "Vacas preñadas",
+      "evento": "Muerte",
+      "fecha": "2026-05-18",
+      "id": 1784563545564,
+      "nombre": "Vaca prenada",
+      "obs": "Al dia de la fecha van estas muertes. Se organizo una necropsia y no se puede llegar a una conclusion de la causa",
+      "peso": 450
+    },
+    {
+      "campo": "San Julian",
+      "cant": 58,
+      "cat": "Vacas preñadas",
+      "evento": "Entrada",
+      "fecha": "2026-05-18",
+      "id": 1784563219572,
+      "nombre": "Vaca prenada",
+      "obs": ""
+    },
+    {
+      "campo": "Don Damaso",
+      "cant": 36,
+      "cat": "Terneras",
+      "evento": "Parto",
+      "fecha": "2026-07-15",
+      "id": 1784117158303,
+      "nombre": "Paricion 26-27",
+      "obs": "mitad y mitad",
+      "peso": 80
+    },
+    {
+      "campo": "Don Damaso",
+      "cant": 37,
+      "cat": "Terneros",
+      "evento": "Parto",
+      "fecha": "2026-07-15",
+      "id": 1784117111232,
+      "nombre": "Paricion 26-27",
+      "obs": "Avanzada la paricion no se tiene un numero certero pero se estima que el 30% esta parido",
+      "peso": 80
+    },
+    {
+      "campo": "El Sermon Chico",
+      "cant": 9,
+      "cat": "Vacas preñadas",
+      "catDestino": "Otra",
+      "evento": "Recategorización",
+      "fecha": "2026-07-15",
+      "id": 1784116710831,
+      "obs": "Segundo Sangrado"
+    },
+    {
+      "campo": "San Julian",
+      "cant": 1,
+      "cat": "Terneras",
+      "evento": "Muerte",
+      "fecha": "2026-05-10",
+      "id": 1783343792287,
+      "nombre": "VQ REPOSICION SERMON CHICO",
+      "obs": "Murio en el viaje",
+      "peso": 193
+    },
+    {
+      "campo": "El Sermon Chico",
+      "cant": 1,
+      "cat": "Terneros",
+      "evento": "Muerte",
+      "fecha": "2026-06-29",
+      "id": 1783343505127,
+      "obs": "ternero macho que no aparecia",
+      "peso": 153
+    },
+    {
+      "campo": "San Julian",
+      "cant": 20,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-04-01",
+      "id": 1783343161970,
+      "nombre": "VQ Madelan Chascomus",
+      "obs": "se juntan con las 90 en el corral 2",
+      "peso": 238
+    },
+    {
+      "campo": "San Julian",
+      "cant": 90,
+      "cat": "Vaquillonas",
+      "evento": "Entrada",
+      "fecha": "2026-06-15",
+      "id": 1783342191758,
+      "nombre": "VQ Coronel Suarez",
+      "obs": "Nacho Biaus (1 manca)",
+      "peso": 230
+    },
+    {
+      "campo": "El Sermon Chico",
+      "cant": 1,
+      "cat": "Vacas preñadas",
+      "evento": "Muerte",
+      "fecha": "2026-06-15",
+      "id": 1783342077502,
+      "obs": "Encajada en el barro",
+      "peso": 450
+    },
+    {
+      "campo": "El Sermon Chico",
+      "cant": 1,
+      "cat": "Vacas preñadas",
+      "evento": "Muerte",
+      "fecha": "2026-06-08",
+      "id": 1783342045063,
+      "obs": "Vaca Gorda sobre la costa del alambre",
+      "peso": 450
+    }
+  ],
+  "campo_lluvias": [
+    {
+      "fecha": "2026-08-01",
+      "id": 1785955402556,
+      "mm": 95,
+      "obs": "Tormenta",
+      "sector": "La Alegria"
+    }
+  ],
+  "campo_traslados": [
+    {
+      "cant": 1,
+      "cat": "Terneros",
+      "destino": "Feedlot Don Pancho",
+      "fecha": "2026-06-18",
+      "id": 1783343660495,
+      "obs": "el que fuee  en el viaje anterior",
+      "origen": "El Sermon Chico",
+      "peso": 200
+    },
+    {
+      "cant": 66,
+      "cat": "Terneras",
+      "destino": "Feedlot Don Pancho",
+      "fecha": "2026-06-18",
+      "id": 1783343629102,
+      "obs": "fue un macho en el mismo viaje. CON EL RUSO. Falta una hembra que no aparece.",
+      "origen": "El Sermon Chico",
+      "peso": 200
+    },
+    {
+      "cant": 70,
+      "cat": "Terneras",
+      "destino": "Feedlot Don Pancho",
+      "fecha": "2026-06-18",
+      "id": 1783343559224,
+      "obs": "",
+      "origen": "El Sermon Chico",
+      "peso": 200
+    },
+    {
+      "cant": 75,
+      "cat": "Terneras",
+      "destino": "San Julian",
+      "fecha": "2026-06-04",
+      "id": 1783342734717,
+      "obs": "REPOSICION",
+      "origen": "El Sermon Chico",
+      "peso": 193
+    }
+  ],
+  "campo_stock_base": {
+    "El Sermon Chico": {
+      "Vacas preñadas": 395,
+      "Vaquillonas": 54,
+      "Terneras": 212,
+      "Terneros": 2,
+      "Toros": 25,
+      "Otra": 46
+    },
+    "San Julian": {
+      "Vacas preñadas": 64,
+      "Vacas secas": 0,
+      "Toros": 1,
+      "Terneros": 8
+    },
+    "Don Damaso": {
+      "Vacas preñadas": 245,
+      "Toros": 21
+    }
+  },
+  "campo_feedlot": {
+    "corrales": [
+      null,
+      {
+        "cant": 109,
+        "cat": "Vacas preñadas",
+        "corral": 1,
+        "fechaEntrada": "2026-05-19",
+        "id": 1784563031949,
+        "nombre": "Vaca prenada",
+        "obs": "El madrono y Don Damaso",
+        "pesoInicial": 400
+      },
+      {
+        "cant": 111,
+        "cat": "Vaquillonas",
+        "corral": 2,
+        "fechaEntrada": "2026-06-15",
+        "id": 1783342472542,
+        "nombre": "VQ REPOSICION 230",
+        "obs": "Coronel Suarez + Cascomus. BIAUS Y MADELAN. ",
+        "pesoInicial": 230
+      },
+      {
+        "cant": 74,
+        "cat": "Vaquillonas",
+        "corral": 3,
+        "fechaEntrada": "2026-06-04",
+        "id": 1783342794846,
+        "nombre": "VQ REPOSICION SERMON CHICO",
+        "obs": "SERMON CHICO",
+        "pesoInicial": 193
+      }
+    ],
+    "historial": [
+      {
+        "cant": 180,
+        "cat": "Vaquillonas",
+        "corral": 2,
+        "fechaEntrada": "2026-06-15",
+        "fechaSalida": "2026-07-06",
+        "id": 1783342274718,
+        "nombre": "VQ Coronel Suarez",
+        "obs": "BIAUS. CORONEL SUAREZ",
+        "pesoInicial": 230
+      },
+      {
+        "cant": 95,
+        "cat": "Vacas preñadas",
+        "corral": 1,
+        "fechaEntrada": "2026-05-01",
+        "fechaSalida": "2026-07-20",
+        "id": 1783343243352,
+        "nombre": "Vacas de descarte",
+        "obs": "Madrono y sermon chico",
+        "pesoInicial": 400
+      }
+    ]
+  }
+}

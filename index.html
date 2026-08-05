@@ -373,17 +373,19 @@ const _FB_KEYS=['campo_hacienda','campo_gastos','campo_lluvias','campo_traslados
 function _fbKey(key){return key.replace(/_/g,'__');}
 _FB_KEYS.forEach(key=>{
   _db.ref('bilkura/'+_fbKey(key)).on('value',snap=>{
-    const val=snap.val();
-    if(val!==null&&val!==undefined){
-      localStorage.setItem(key,JSON.stringify(val));
-      // Re-render affected sections
-      if(key==='campo_hacienda'){renderHacienda(val);renderStock();}
-      if(key==='campo_gastos')renderGastos(val);
-      if(key==='campo_lluvias')renderLluvias(val);
-      if(key==='campo_traslados')renderTraslados(val);
-      if(key==='campo_feedlot')renderFeedlot();
-      if(key==='campo_campos_list'){populateCampoSelects();renderStock();}
-    }
+    const raw=snap.val();
+    if(raw===null||raw===undefined)return;
+    // Data stored as JSON string to avoid Firebase array→object conversion
+    const val=typeof raw==='string'?JSON.parse(raw):raw;
+    localStorage.setItem(key,JSON.stringify(val));
+    // Re-render affected sections
+    if(key==='campo_hacienda'){renderHacienda(val);renderStock();}
+    if(key==='campo_gastos')renderGastos(val);
+    if(key==='campo_lluvias')renderLluvias(val);
+    if(key==='campo_traslados')renderTraslados(val);
+    if(key==='campo_feedlot')renderFeedlot();
+    if(key==='campo_campos_list'){populateCampoSelects();renderStock();}
+    if(key==='campo_stock_base')renderStock();
   });
 });
 
@@ -393,7 +395,7 @@ function loadObj(key,def){try{return JSON.parse(localStorage.getItem(key)||JSON.
 function save(key,data){
   localStorage.setItem(key,JSON.stringify(data));
   if(_FB_KEYS.includes(key)){
-    _db.ref('bilkura/'+_fbKey(key)).set(data).catch(e=>console.warn('Firebase save error:',e));
+    _db.ref('bilkura/'+_fbKey(key)).set(JSON.stringify(data)).catch(e=>console.warn('Firebase save error:',e));
   }
 }
 
@@ -1091,7 +1093,7 @@ function importarDatos(){
   reader.onload=function(e){
     try{
       const backup=JSON.parse(e.target.result);
-      Object.entries(backup).forEach(([k,v])=>{localStorage.setItem(k,JSON.stringify(v));if(_FB_KEYS.includes(k))_db.ref('bilkura/'+_fbKey(k)).set(v);});
+      Object.entries(backup).forEach(([k,v])=>{localStorage.setItem(k,JSON.stringify(v));if(_FB_KEYS.includes(k))_db.ref('bilkura/'+_fbKey(k)).set(JSON.stringify(v));});
       showToast('Datos importados ✓');
       location.reload();
     }catch(err){showToast('Archivo inválido');}
