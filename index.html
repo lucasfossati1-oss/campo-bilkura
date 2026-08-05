@@ -367,7 +367,7 @@ function switchTab(tab){
 const _fbConfig={apiKey:"AIzaSyCE_fQU5xZTVG8CvulcM4wX0nlWoggENmQ",authDomain:"campo-bilkura.firebaseapp.com",databaseURL:"https://campo-bilkura-default-rtdb.firebaseio.com",projectId:"campo-bilkura",storageBucket:"campo-bilkura.firebasestorage.app",messagingSenderId:"577573695831",appId:"1:577573695831:web:0551faa6dc6f86b31d4e12"};
 const _fbApp=firebase.initializeApp(_fbConfig);
 const _db=firebase.database();
-const _FB_KEYS=['campo_hacienda','campo_gastos','campo_lluvias','campo_traslados','campo_feedlot','campo_campos_list'];
+const _FB_KEYS=['campo_hacienda','campo_gastos','campo_lluvias','campo_traslados','campo_feedlot','campo_campos_list','campo_stock_base'];
 
 // Sync from Firebase to localStorage on startup, then listen for changes
 function _fbKey(key){return key.replace(/_/g,'__');}
