@@ -2,7 +2,7 @@
   "name": "Registro de Campo BILKURA",
   "short_name": "Campo",
   "description": "Registro de hacienda, gastos, lluvias y traslados - BILKURA S.A.",
-  "start_url": "/",
+  "start_url": "/campo-bilkura/",
   "display": "standalone",
   "background_color": "#f5f5f0",
   "theme_color": "#2d6a2d",
