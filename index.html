@@ -11,6 +11,8 @@
 <title>Campo · BILKURA</title>
 <link rel="apple-touch-icon" href="icon2.png">
 <link rel="manifest" href="manifest.json">
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:16px;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
@@ -361,10 +363,39 @@ function switchTab(tab){
   if(tab==='feedlot')renderFeedlot();
 }
 
+// Firebase setup
+const _fbConfig={apiKey:"AIzaSyCE_fQU5xZTVG8CvulcM4wX0nlWoggENmQ",authDomain:"campo-bilkura.firebaseapp.com",databaseURL:"https://campo-bilkura-default-rtdb.firebaseio.com",projectId:"campo-bilkura",storageBucket:"campo-bilkura.firebasestorage.app",messagingSenderId:"577573695831",appId:"1:577573695831:web:0551faa6dc6f86b31d4e12"};
+const _fbApp=firebase.initializeApp(_fbConfig);
+const _db=firebase.database();
+const _FB_KEYS=['campo_hacienda','campo_gastos','campo_lluvias','campo_traslados','campo_feedlot','campo_campos_list'];
+
+// Sync from Firebase to localStorage on startup, then listen for changes
+function _fbKey(key){return key.replace(/_/g,'__');}
+_FB_KEYS.forEach(key=>{
+  _db.ref('bilkura/'+_fbKey(key)).on('value',snap=>{
+    const val=snap.val();
+    if(val!==null&&val!==undefined){
+      localStorage.setItem(key,JSON.stringify(val));
+      // Re-render affected sections
+      if(key==='campo_hacienda'){renderHacienda(val);renderStock();}
+      if(key==='campo_gastos')renderGastos(val);
+      if(key==='campo_lluvias')renderLluvias(val);
+      if(key==='campo_traslados')renderTraslados(val);
+      if(key==='campo_feedlot')renderFeedlot();
+      if(key==='campo_campos_list'){populateCampoSelects();renderStock();}
+    }
+  });
+});
+
 // localStorage helpers
 function load(key){try{return JSON.parse(localStorage.getItem(key)||'[]');}catch(e){return[];}}
 function loadObj(key,def){try{return JSON.parse(localStorage.getItem(key)||JSON.stringify(def));}catch(e){return def;}}
-function save(key,data){localStorage.setItem(key,JSON.stringify(data));}
+function save(key,data){
+  localStorage.setItem(key,JSON.stringify(data));
+  if(_FB_KEYS.includes(key)){
+    _db.ref('bilkura/'+_fbKey(key)).set(data).catch(e=>console.warn('Firebase save error:',e));
+  }
+}
 
 function fmtDate(d){if(!d)return'';const[y,m,day]=d.split('-');return`${day}/${m}/${y}`;}
 function fmtNum(n){return Number(n).toLocaleString('es-AR');}
@@ -1060,7 +1091,7 @@ function importarDatos(){
   reader.onload=function(e){
     try{
       const backup=JSON.parse(e.target.result);
-      Object.entries(backup).forEach(([k,v])=>localStorage.setItem(k,JSON.stringify(v)));
+      Object.entries(backup).forEach(([k,v])=>{localStorage.setItem(k,JSON.stringify(v));if(_FB_KEYS.includes(k))_db.ref('bilkura/'+_fbKey(k)).set(v);});
       showToast('Datos importados ✓');
       location.reload();
     }catch(err){showToast('Archivo inválido');}
